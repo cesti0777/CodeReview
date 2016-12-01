@@ -89,7 +89,7 @@ public class Client extends Frame implements ActionListener{
 				packet.setId(id);	
 				oos.writeObject(packet);
 				oos.flush();
-				frame = new CodeReviewFrame(oos);
+				frame = new CodeReviewFrame(oos,id);
 				setLayout(cardLayout);
 				add("main", frame);
 			}

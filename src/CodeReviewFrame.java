@@ -40,8 +40,12 @@ public class CodeReviewFrame extends JFrame{
 	//서버와 입출력을 할 소켓정보
 	ObjectOutputStream oos ;
 	
-	public CodeReviewFrame(ObjectOutputStream oos){
-		
+	//Client클래스로부터 날라온 id
+	private String id;
+	
+	public CodeReviewFrame(ObjectOutputStream oos, String id){
+		//id연결
+		this.id=id;
 		//소켓연결 
 		try{
 			this.oos = oos;
@@ -176,7 +180,55 @@ public class CodeReviewFrame extends JFrame{
 		setSize(1440, 1000);
 		setVisible(true);
 	}
+	
 	public void addListener(){
+		//active버튼 클릭
+				this.editActive.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						// TODO Auto-generated method stub
+						Packet packet = new Packet();
+						packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
+						packet.setMsgType(4);
+						packet.setActivateSignal(true);
+						
+						try {
+							oos.writeObject(packet);
+							oos.flush();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						
+						
+					}
+					
+				});
+				//deactive버튼 클릭
+				this.editDeactive.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+						Packet packet = new Packet();
+						packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
+						packet.setMsgType(5);
+						packet.setActivateSignal(false);
+						
+						try {
+							oos.writeObject(packet);
+							oos.flush();
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+					}
+					
+				});
+
 		this.compileButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {

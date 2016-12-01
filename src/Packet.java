@@ -5,7 +5,7 @@ import java.io.Serializable;
  * 
  * msgType : 
  * 			클라이언트가 어떤 종류의 메세지를 보내는지.
- * 			0은 에디터 타이핑, 1은 채팅, 2는 컴파일 ,3은 접속/종료메세지 
+ * 			1은 채팅, 2는 컴파일 ,3은 접속/종료메세지 ,4은 에디터 타이핑 권한 요청, 5는 에디터 타이핑 후 권한 반납 요청 및 타이핑한 메시지가 전체클라이언트에게 전송되어짐.
  * 
  * id : 
  * 		에디터창 활성화 비 활성화시 보낸사용자의 id
@@ -65,6 +65,12 @@ public class Packet implements Serializable{
 	public void setSourceCode(String sourceCode) {
 		this.sourceCode = sourceCode;
 	}
+	@Override
+	public String toString() {
+		return "Packet [lang=" + lang + ", msgType=" + msgType + ", id=" + id + ", ch=" + ch + ", activateSignal="
+				+ activateSignal + ", sourceCode=" + sourceCode + "]";
+	}
+	
 
 	
 }

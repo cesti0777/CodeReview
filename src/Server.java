@@ -8,11 +8,24 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 public class Server {
+	//ArrayList<CrClientList> clientList =new ArrayList<CrClientList>();
+	public static String lock;
+	
+	static{
+		lock = "noUser";
+	}
+	
+
+
+	
+
 
 	public static void main(String[] args) {
 		
@@ -22,10 +35,13 @@ public class Server {
 			System.out.println("접속을 기다립니다");
 			HashMap hashMap = new HashMap();
 			while(true){
+				
 				Socket sock = server.accept();
 				System.out.println("클라이언트 접속");
 				ServerThread thread = new ServerThread(sock, hashMap);
 				thread.start();
+				//	CrClientList =new new CrClientList(sock);
+				
 			}	
 		}
 		catch(Exception e){
@@ -41,7 +57,7 @@ class ServerThread extends Thread{
 	private String id;
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
-	private HashMap hashMap;
+	private HashMap<String, ObjectOutputStream> hashMap;
 	private boolean initFlag = false;
 	
 	ServerThread(Socket sock, HashMap hm){
@@ -84,10 +100,46 @@ class ServerThread extends Thread{
 			while((obj = ois.readObject()) != null){
 				
 				Packet packet = (Packet)obj;
+				System.out.println("패킷도착");
+				System.out.println(obj.toString());
+				
+					Set<String> keys=hashMap.keySet();
+					//String[] arr=(String[])keys.toArray();
+					Object[] arr=keys.toArray();
+					for(int i1=0;i1<arr.length;i1++){
+						System.out.println("HashMap의 id출력:"+arr[i1]);
+					}
+				
+			
+				
 				switch(packet.getMsgType()){
 				//에디터 타이핑 
-					case 0:
-						break;
+				case 4:
+					/*if (Server.lock.equals("noUser")) {
+						//락안걸린상태다 권한을 얻음.lock의 값에는 사용자의 ID가 등록되어있을 것임.
+						for(int i=0;i<hashMap.size();i++){
+							Set<String> keys=hashMap.keySet();
+							String[] arr=(String[])keys.toArray();
+							for(int i1=0;i1<arr.length;i1++){
+								System.out.println("HashMap의 id출력:"+arr[i1]);
+							}
+						}
+						
+					} else {
+						//누가 사용중이다. 
+						
+
+					}*/
+					break;
+				case 5:
+					if (Server.lock.equals("사용자의ID")) {
+					//락변수의 사용자의 ID와 일치하면 락을 분다
+
+					} else {
+					//일치하지않는경우 워닝 메시지를 보내자.
+
+					}
+					break;
 						
 					//채팅 
 					case 1:
@@ -172,9 +224,9 @@ class CompileThread extends Thread{
 	
 	CompileThread(Packet packet, ObjectOutputStream oos){
 		
-		String filePath = "/home/seong/Desktop/archive/test.txt";
-		String renameFilePath = "/home/seong/Desktop/archive/test.c";
-		String compileResultFilePath = "/home/seong/Desktop/archive/result.txt";
+		String filePath = null;
+		String renameFilePath = null;
+		String compileResultFilePath = null;
 		
 		File file = null;
 		File renameFile = null;
@@ -193,7 +245,40 @@ class CompileThread extends Thread{
 		
 		try{
 			
-			//파일을 archive디렛터리에 txt파일형태로 저장한다.
+			switch(packet.getLang()){
+			
+			//c
+			case 0 :
+				filePath = "/home/seong/Desktop/archive/c/test.txt";
+				renameFilePath = "/home/seong/Desktop/archive/c/test.c";
+				compileResultFilePath = "/home/seong/Desktop/archive/c/result.txt";
+				break;
+			
+			//c++
+			case 1 :
+				filePath = "/home/seong/Desktop/archive/cpp/test.txt";
+				renameFilePath = "/home/seong/Desktop/archive/cpp/test.cpp";
+				compileResultFilePath = "/home/seong/Desktop/archive/cpp/result.txt";
+				break;
+				
+			//python	
+			case 2 :
+				filePath = "/home/seong/Desktop/archive/python/test.txt";
+				renameFilePath = "/home/seong/Desktop/archive/python/test.py";
+				compileResultFilePath = "/home/seong/Desktop/archive/python/result.txt";
+				break;
+				
+			//java	
+			case 3 :
+				filePath = "/home/seong/Desktop/archive/java/MyClass.txt";
+				renameFilePath = "/home/seong/Desktop/archive/java/MyClass.java";
+				compileResultFilePath = "/home/seong/Desktop/archive/java/result.txt";
+				
+				break;
+			
+			}
+			
+		
 			file = new File(filePath);
 			renameFile = new File(renameFilePath);
 			
@@ -202,7 +287,7 @@ class CompileThread extends Thread{
 			fw.flush();
 			fw.close();
 			
-			//txt파일을 .c파일로 이름을 변환한다.
+			
 			if(file.renameTo(renameFile)){
 				System.out.println("성공적으로 변환하였습니다.");
 			}
@@ -220,7 +305,7 @@ class CompileThread extends Thread{
 					System.out.println("불러오는데 성공햇습니다.");
 					fis = new FileInputStream(compileResultFilePath);
 					while ((inputLine = reader.readLine()) != null){
-					       stringBuffer.append(inputLine);
+					       stringBuffer.append(inputLine).append("\n");
 					}
 					
 					Packet resultPacket = new Packet();
@@ -228,6 +313,9 @@ class CompileThread extends Thread{
 					resultPacket.setSourceCode(stringBuffer.toString());
 					oos.writeObject(resultPacket);
 					oos.flush();
+					if(resultFile.exists()){
+						resultFile.delete();
+					}
 					hasResult = true;
 				}
 			}
