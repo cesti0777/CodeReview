@@ -115,25 +115,23 @@ class ServerThread extends Thread{
 				switch(packet.getMsgType()){
 				//에디터 타이핑 
 				case 4:
-					/*if (Server.lock.equals("noUser")) {
-						//락안걸린상태다 권한을 얻음.lock의 값에는 사용자의 ID가 등록되어있을 것임.
-						for(int i=0;i<hashMap.size();i++){
-							Set<String> keys=hashMap.keySet();
-							String[] arr=(String[])keys.toArray();
-							for(int i1=0;i1<arr.length;i1++){
-								System.out.println("HashMap의 id출력:"+arr[i1]);
-							}
-						}
+					if (Server.lock.equals("noUser")) {
+						Server.lock=id;
+						System.out.println("case 4  if구문 lock변수 현재 값 확인 "+Server.lock);
 						
 					} else {
 						//누가 사용중이다. 
+						System.out.println("case 4  else구문 lock변수 현재 값 확인 "+Server.lock);
 						
 
-					}*/
+					}
 					break;
 				case 5:
-					if (Server.lock.equals("사용자의ID")) {
+					if (Server.lock.equals(id)) {
 					//락변수의 사용자의 ID와 일치하면 락을 분다
+						System.out.println("case 5 if구문 락을 해제하려는 사용자:"+id);
+						Server.lock="noUser";
+						System.out.println("해제된 lock상태"+Server.lock);
 
 					} else {
 					//일치하지않는경우 워닝 메시지를 보내자.
