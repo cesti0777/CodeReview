@@ -30,7 +30,8 @@ public class Client extends Frame implements ActionListener{
 	String id = "seong";
 	CodeReviewFrame frame;
 	
-	public Client(String ip){	
+	public Client(String ip){
+		//전상우등장.
 		super("채팅 클라이언트");
 		cardLayout = new CardLayout();
 		setLayout(cardLayout);
