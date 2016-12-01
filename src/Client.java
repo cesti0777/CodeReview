@@ -33,20 +33,20 @@ public class Client {
 
 		try {
 			sock = new Socket("127.0.0.1", 11002);
-			System.out.println("�젒�냽�뿉 �꽦怨듯뻽�뒿�땲�떎.");
+			System.out.println("접속에 성공하였습니다.");
 
 			oos = new ObjectOutputStream(sock.getOutputStream());
 			ois = new ObjectInputStream(sock.getInputStream());
 			frame = new CodeReviewFrame(oos,name);
 
-			// �젒�냽�옄 id瑜� �븣�젮 二쇰뒗 �뙣�궥
+			//접속자 id를 알려 주는 패킷
 			Packet packet = new Packet();
 			packet.setMsgType(3);
 			packet.setId(name);
 			oos.writeObject(packet);
 			oos.flush();
 
-			System.out.println("硫붿꽭吏� 蹂대궡湲� �꽦怨�");
+			System.out.println("메세지 보내기 성공");
 
 
 
