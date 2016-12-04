@@ -26,6 +26,7 @@ public class Client {
 		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
 		boolean endFlag = false;
+		
 		String name;
 		CodeReviewFrame frame;
 
@@ -95,6 +96,12 @@ class InputThread extends Thread {
 					break;
 				case 3:
 					crf.setPeople(packet.getId());
+					break;
+				case 5:
+					System.out.println("case5:"+packet);
+					break;
+				case 6:
+					System.out.println("case6입니다 :"+packet);
 					break;
 
 				}

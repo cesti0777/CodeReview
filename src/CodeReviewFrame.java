@@ -39,19 +39,10 @@ public class CodeReviewFrame extends JFrame{
 	private JButton editDeactive;
 	private JTextField chatInput;
 
-<<<<<<< HEAD
-	public JTextField getChatInput() {
-		return chatInput;
-	}
-
-	public void setChatInput(JTextField chatInput) {
-		this.chatInput = chatInput;
-	}
-	//서버와 입출력을 할 소켓정보
-=======
-	//�꽌踰꾩� �엯異쒕젰�쓣 �븷 �냼耳볦젙蹂�
->>>>>>> b990c327bb222a29140cb257f5bb4d5d19f50fb6
 	ObjectOutputStream oos ;
+	
+	//선택한 콤보박스(C,C++,Java)
+	private int SelectedIndex;
 	
 	//Client클래스로부터 날라온 id
 	private String id;
@@ -236,17 +227,22 @@ public class CodeReviewFrame extends JFrame{
 			}
 			
 		});
-		//deactive버튼 클릭
+		//deactive버튼 클릭 :락해제 및  에디터창에서 작업한 코드 다른 사람들에게도 전달이 되어야한다.
 		this.editDeactive.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				Packet packet = new Packet();
-				packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
+				packet.setLang(getSelectedIndex());
 				packet.setMsgType(5);
+				packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
 				packet.setActivateSignal(false);
+				packet.setSourceCode(getEditor().getText());
 				
+				/*
+				 * 선택한 콤보박스.
+				 */
 				try {
 					oos.writeObject(packet);
 					oos.flush();
@@ -262,9 +258,11 @@ public class CodeReviewFrame extends JFrame{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Packet packet = new Packet();
+			
 				packet.setMsgType(2);
 				packet.setSourceCode(getEditor().getText());
 				packet.setLang(getCombo().getSelectedIndex());
+				
 				
 				
 				try{
@@ -286,6 +284,8 @@ public class CodeReviewFrame extends JFrame{
 			public void actionPerformed(ActionEvent e) {
 				JComboBox combo = (JComboBox)e.getSource();
 				String basicCode;
+				setSelectedIndex(combo.getSelectedIndex());
+				
 				switch(combo.getSelectedIndex()){
 				
 				case 0 :
@@ -404,4 +404,11 @@ public class CodeReviewFrame extends JFrame{
 	public void setChattingBox(String str) {
 		this.chattingBox.append(str);;
 	}
+	public int getSelectedIndex() {
+		return SelectedIndex;
+	}
+	public void setSelectedIndex(int selectedIndex) {
+		SelectedIndex = selectedIndex;
+	}
+	
 }
