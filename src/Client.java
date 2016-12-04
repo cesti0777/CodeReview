@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
@@ -94,7 +95,23 @@ class InputThread extends Thread {
 					break;
 				case 6:
 					System.out.println("case6입니다 :"+packet);
+					
 					crf.setEditor(packet.getSourceCode());
+					break;
+				case 7:
+					System.out.println("case7입니다 :"+packet);
+					JOptionPane.showMessageDialog(crf, packet.getSourceCode()+"가 사용중입니다");
+					break;
+				case 8:
+					System.out.println("case8입니다 :"+packet);
+					JOptionPane.showMessageDialog(crf, "actvie 버튼을 먼저 눌러주세요");
+
+					break;
+				case 9:
+					System.out.println("case9입니다 :"+packet);
+					//수정창을 able시켜야함.
+					crf.getEditor().setEditable(true);
+					crf.getEditor().setBackground(Color.WHITE);
 					break;
 
 				}

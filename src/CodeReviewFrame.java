@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,7 +48,6 @@ public class CodeReviewFrame extends JFrame{
 	//Client클래스로부터 날라온 id
 	private String id;
 		
-
 	public CodeReviewFrame(ObjectOutputStream oos, String id){
 			//id연결
 		this.id=id;
@@ -83,6 +83,9 @@ public class CodeReviewFrame extends JFrame{
 		sp_editor.setLocation(30,50);
 		sp_editor.setSize(900,580);
 		editor.setTabSize(3);
+		//Editor 색과 권한 추가
+		editor.setEditable(false);
+		editor.setBackground(Color.LIGHT_GRAY);
 		
 		//Console
 		sp_console.setLocation(30, 670);
@@ -221,8 +224,12 @@ public class CodeReviewFrame extends JFrame{
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}	
+				}
+				
+				
+				
 			}
+			
 		});
 		//deactive버튼 클릭 :락해제 및  에디터창에서 작업한 코드 다른 사람들에게도 전달이 되어야한다.
 		this.editDeactive.addActionListener(new ActionListener(){
@@ -235,8 +242,11 @@ public class CodeReviewFrame extends JFrame{
 				packet.setMsgType(5);
 				packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
 				packet.setActivateSignal(false);
-				packet.setSourceCode(getEditor().getText());
 				
+				packet.setSourceCode(getEditor().getText());
+				//락원이가 한 수정창 UI관련부분
+				getEditor().setEditable(false);
+				getEditor().setBackground(Color.LIGHT_GRAY);
 				/*
 				 * 선택한 콤보박스.
 				 */
@@ -247,6 +257,7 @@ public class CodeReviewFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
 			}
 		});
 
@@ -363,32 +374,6 @@ public class CodeReviewFrame extends JFrame{
 				}
 			}			
 		});
-		
-		this.chatInput.addActionListener(new ActionListener(){
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				Packet packet = new Packet();
-				packet.setCh(chatInput.getText());//지빈이가 입력한 userId 들어가야할 부분.
-				packet.setMsgType(1);
-				chattingBox.setText(chatInput.getText());
-				
-				try {
-					oos.writeObject(packet);
-					oos.flush();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				
-				
-			}
-			
-		});
-		
-		
 	}
 	
 	public JToolBar getToolbar() {
@@ -426,18 +411,13 @@ public class CodeReviewFrame extends JFrame{
 	public void setChattingBox(String str) {
 		this.chattingBox.append(str);;
 	}
-<<<<<<< HEAD
 	public int getSelectedIndex() {
 		return SelectedIndex;
 	}
 	public void setSelectedIndex(int selectedIndex) {
 		SelectedIndex = selectedIndex;
 	}
-	
-=======
 	public String getChatInput() {
-		return chatInput.getText();
-	}
->>>>>>> 1be7e5c147825f9b4260e1f3df21d451b3c4c878
-	
+	      return chatInput.getText();
+	 }
 }

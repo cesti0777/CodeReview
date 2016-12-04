@@ -113,7 +113,7 @@ class ServerThread extends Thread{
 				 * private ArrayList<Client_list> list = new ArrayList<Client_list>();//Client를 받을 리스트
 				 */
 				
-				Packet packet = (Packet)obj;
+				Packet receivedPacket = (Packet)obj;
 				System.out.println("패킷도착");
 				System.out.println(obj.toString());
 				
@@ -126,28 +126,49 @@ class ServerThread extends Thread{
 				
 			
 				
-				switch(packet.getMsgType()){
+				switch(receivedPacket.getMsgType()){
 				// active버튼 누르는 경우-락변수에 active한 사용자의 id가 입력된다.
 				case 4:
 					// noUser상태에서 락변수 권한 요청을 하는경우
+					// 4은 (active-요청)에디터 타이핑 권한 요청,
 					if (Server.lock.equals("noUser")) {
 						Server.lock = id;
 						System.out.println("case 4  if구문 lock변수 현재 값 확인 " + Server.lock);
+						//9은 (active-정상응답)
+						//9번 타입의 패킷 전송 해야한다
+						
+						ObjectOutputStream output=hashMap.get(id);
+						Packet responsePacket = new Packet();
+						responsePacket.setId(id);
+						responsePacket.setMsgType(9);
+						
+						output.writeObject(responsePacket);
+						
 
 					} else {
-<<<<<<< HEAD
 						// 누가 사용중 상황에서 락변수 권한 요청을 하는 경우
+						// 7은 (active-비정상응답)active 요청시 누군가 사용중이라는 alert창에 대한
+						
+						// 메시지를 전송할 때의 메시지
 						System.out.println("case 4  else구문 lock변수 현재 값 확인 " + Server.lock);
+						// 누가 사용중이다.
+						System.out.println("case 4  else구문 lock변수 현재 값 확인 " + Server.lock);
+						
+						ObjectOutputStream output=hashMap.get(receivedPacket.getId());
+						Packet responsePacket = new Packet();
+						responsePacket.setId(id);
+						responsePacket.setMsgType(7);
+						responsePacket.setSourceCode(Server.lock);
+						output.writeObject(responsePacket);
+						
 
-=======
-						//누가 사용중이다. 
-						System.out.println("case 4  else구문 lock변수 현재 값 확인 "+Server.lock);
->>>>>>> 1be7e5c147825f9b4260e1f3df21d451b3c4c878
 					}
 					break;
 				// deactive버튼 누르는 경우- 락변수가 풀리면서 그동안 수정한 내용들이 모든 사용자들에게 전송된다.
+				////5는 (deactive-요청)에디터 타이핑 후 권한 반납 요청 및 타이핑한 메시지가 전체클라이언트에게 전송되어짐.,
 				case 5:
 					if (Server.lock.equals(id)) {
+						
 						// 락변수의 사용자의 ID와 일치하면 락을 분다 & 소스코드 내용들이 모든 사용자들에게 전송된다.
 						System.out.println("case 5 if구문 락을 해제하려는 사용자:" + id);
 						Server.lock = "noUser";
@@ -160,9 +181,10 @@ class ServerThread extends Thread{
 						
 						for(int i=0;i<array.length;i++){
 							System.out.println("HashMap의 id출력:"+array[i]);
-							String editedSourceCode=packet.getSourceCode();
+							String editedSourceCode=receivedPacket.getSourceCode();
 							Packet sendPacket =new Packet();
-							sendPacket.setLang(packet.getLang());
+							sendPacket.setLang(receivedPacket.getLang());
+							//6은 (deactive-정상응답)누군가 에디터창에서 수정하고 수정완료해서 수정된 내용을 다른 사람들한테 보내라는 종류의 메시지
 							sendPacket.setMsgType(6);
 							sendPacket.setId(id);
 							sendPacket.setSourceCode(editedSourceCode);
@@ -171,31 +193,26 @@ class ServerThread extends Thread{
 
 					} else {
 						// 일치하지않는경우 어떤 사용자가 사용중이라고 워닝 메시지를 보내자.
+						//8은 (deactive-비정상응답)deacitve 요청한 사용자와 현재 lock변수의 사용자와 맞지않아서 충돌나는경우 alert창에 대한 메시지를 전송할 때의 메시지
+						ObjectOutputStream output=hashMap.get(receivedPacket.getId());
+						Packet responsePacket = new Packet();
+						responsePacket.setId(receivedPacket.getId());
+						responsePacket.setMsgType(8);
+						responsePacket.setSourceCode(Server.lock);
+						output.writeObject(responsePacket);
 
 					}
 					break;
-<<<<<<< HEAD
 
-				// 채팅
-				case 1:
-					break;
-
-				// 컴파일
-				case 2:
-					new CompileThread(packet, oos);
-					break;
-=======
-						
 					//채팅 
 					case 1:
-						broadcast(packet);
+						broadcast(receivedPacket);
 						break;
 					
 					//컴파일
 					case 2:
-						new CompileThread(packet, hashMap);
+						new CompileThread(receivedPacket, hashMap);
 						break;
->>>>>>> 1be7e5c147825f9b4260e1f3df21d451b3c4c878
 				}
 			}
 		}
