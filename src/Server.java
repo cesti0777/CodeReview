@@ -168,7 +168,6 @@ class ServerThread extends Thread{
 							hashMap.get(array[i]).writeObject(sendPacket);
 						}
 
-
 					} else {
 						// 일치하지않는경우 어떤 사용자가 사용중이라고 워닝 메시지를 보내자.
 
