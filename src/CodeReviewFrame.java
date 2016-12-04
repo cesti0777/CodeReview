@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,7 +49,6 @@ public class CodeReviewFrame extends JFrame{
 	//Client클래스로부터 날라온 id
 	private String id;
 		
-
 	public CodeReviewFrame(ObjectOutputStream oos, String id){
 			//id연결
 		this.id=id;
@@ -84,6 +84,9 @@ public class CodeReviewFrame extends JFrame{
 		sp_editor.setLocation(30,50);
 		sp_editor.setSize(900,580);
 		editor.setTabSize(3);
+		//Editor 색과 권한 추가
+		editor.setEditable(false);
+		editor.setBackground(Color.LIGHT_GRAY);
 		
 		//Console
 		sp_console.setLocation(30, 670);
@@ -222,8 +225,12 @@ public class CodeReviewFrame extends JFrame{
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}	
+				}
+				
+				
+				
 			}
+			
 		});
 		//deactive버튼 클릭 :락해제 및  에디터창에서 작업한 코드 다른 사람들에게도 전달이 되어야한다.
 		this.editDeactive.addActionListener(new ActionListener(){
@@ -236,8 +243,11 @@ public class CodeReviewFrame extends JFrame{
 				packet.setMsgType(5);
 				packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
 				packet.setActivateSignal(false);
-				packet.setSourceCode(getEditor().getText());
 				
+				packet.setSourceCode(getEditor().getText());
+				//락원이가 한 수정창 UI관련부분
+				getEditor().setEditable(false);
+				getEditor().setBackground(Color.LIGHT_GRAY);
 				/*
 				 * 선택한 콤보박스.
 				 */
@@ -247,6 +257,10 @@ public class CodeReviewFrame extends JFrame{
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				}
+				finally{
+					getEditor().setEditable(false);
+					getEditor().setBackground(Color.LIGHT_GRAY);
 				}
 			}
 		});
@@ -260,8 +274,6 @@ public class CodeReviewFrame extends JFrame{
 				packet.setSourceCode(getEditor().getText());
 				packet.setLang(getCombo().getSelectedIndex());
 				
-				
-				
 				try{
 					//而댄뙆�씪�븷 �뙆�씪�젙蹂� 蹂대궡湲�
 					oos.writeObject(packet);
@@ -269,8 +281,7 @@ public class CodeReviewFrame extends JFrame{
 				}
 				catch(Exception e1){
 					System.out.println(e1);
-				}
-				
+				}	
 				//TO DO : �꽌踰꾨줈 蹂대궡湲�
 			}
 		});
@@ -364,17 +375,15 @@ public class CodeReviewFrame extends JFrame{
 				}
 			}			
 		});
-		
-		this.chatInput.addActionListener(new ActionListener(){
 
+		this.chatInput.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				Packet packet = new Packet();
-				packet.setCh(chatInput.getText());//지빈이가 입력한 userId 들어가야할 부분.
+				packet.setCh(chatInput.getText());// 吏�鍮덉씠媛� �엯�젰�븳 userId �뱾�뼱媛��빞�븷 遺�遺�.
 				packet.setMsgType(1);
-				chattingBox.setText(chatInput.getText());
-				
+				packet.setId(id);
 				try {
 					oos.writeObject(packet);
 					oos.flush();
@@ -382,6 +391,7 @@ public class CodeReviewFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				chatInput.setText("");
 			}
 		});
 		
@@ -460,6 +470,7 @@ public class CodeReviewFrame extends JFrame{
   			fr = new FileReader(file);
   			br = new BufferedReader(fr);
   			String line = null;
+  			this.getEditor().setText("");
   			while( (line = br.readLine()) != null){
   				this.getEditor().append(line + "\n");
   			}

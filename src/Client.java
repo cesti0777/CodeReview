@@ -1,4 +1,7 @@
 
+import java.awt.Color;
+
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -88,7 +91,7 @@ class InputThread extends Thread {
 
 				// 채팅
 				case 1:
-					crf.setChattingBox(packet.getCh());
+					crf.setChattingBox(packet.getId()+": "+packet.getCh()+"\n");
 					break;
 
 				// 컴파일
@@ -96,7 +99,7 @@ class InputThread extends Thread {
 					crf.setConsole(packet.getSourceCode());
 					break;
 				case 3:
-					crf.setPeople(packet.getId());
+					crf.setPeople(packet.getId()+"\n");
 					break;
 
 				case 4:
@@ -111,7 +114,27 @@ class InputThread extends Thread {
 					break;
 				case 6:
 					System.out.println("case6입니다 :"+packet);
+					//제발되라
+					crf.getEditor().setEditable(false);
+					crf.getEditor().setBackground(Color.LIGHT_GRAY);
+					
 					crf.setEditor(packet.getSourceCode());
+					break;
+
+				case 7:
+					System.out.println("case7입니다 :"+packet);
+					JOptionPane.showMessageDialog(crf, packet.getSourceCode()+"가 사용중입니다");
+					break;
+				case 8:
+					System.out.println("case8입니다 :"+packet);
+					JOptionPane.showMessageDialog(crf, "actvie 버튼을 먼저 눌러주세요");
+
+					break;
+				case 9:
+					System.out.println("case9입니다 :"+packet);
+					//수정창을 able시켜야함.
+					crf.getEditor().setEditable(true);
+					crf.getEditor().setBackground(Color.WHITE);
 					break;
 				}
 			}
