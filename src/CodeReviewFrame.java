@@ -2,11 +2,12 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -381,14 +382,19 @@ public class CodeReviewFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
-				
 			}
-			
 		});
 		
-		
+		this.openButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				open();
+			}
+		});
+		this.saveButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				save();
+			}
+		});
 	}
 	
 	public JToolBar getToolbar() {
@@ -435,5 +441,34 @@ public class CodeReviewFrame extends JFrame{
 	public String getChatInput() {
 		return chatInput.getText();
 	}
-
+	public void open(){
+		//��ȭ���ڸ� ����.
+  		JFileChooser fileChooser = new JFileChooser();
+  		fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+  		
+  		int result = fileChooser.showOpenDialog(this);
+  		
+  		if(result == JFileChooser.CANCEL_OPTION)
+  			return;
+  			
+  		File file = fileChooser.getSelectedFile();
+  		
+  		FileReader fr = null;
+  		BufferedReader br = null;
+  		try{
+  			byte[] buffer = new byte[512];
+  			fr = new FileReader(file);
+  			br = new BufferedReader(fr);
+  			String line = null;
+  			while( (line = br.readLine()) != null){
+  				this.getEditor().append(line + "\n");
+  			}
+  		}
+  		catch(Exception e){
+  			
+  		}
+  	}
+	public void save(){
+		
+	}
 }

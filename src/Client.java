@@ -113,10 +113,8 @@ class InputThread extends Thread {
 					System.out.println("case6입니다 :"+packet);
 					crf.setEditor(packet.getSourceCode());
 					break;
-
 				}
 			}
-			
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
