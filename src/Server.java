@@ -21,7 +21,7 @@ public class Server {
 	static{
 		lock = "noUser";
 	}
-	
+
 	public static void main(String[] args) {
 		
 		try{
@@ -117,8 +117,6 @@ class ServerThread extends Thread{
 					} else {
 						//누가 사용중이다. 
 						System.out.println("case 4  else구문 lock변수 현재 값 확인 "+Server.lock);
-						
-
 					}
 					break;
 				case 5:
@@ -140,7 +138,7 @@ class ServerThread extends Thread{
 					
 					//컴파일
 					case 2:
-						new CompileThread(packet, oos);
+						new CompileThread(packet, hashMap);
 						break;
 				}
 			}
@@ -215,7 +213,7 @@ class ServerThread extends Thread{
 
 class CompileThread extends Thread{
 	
-	CompileThread(Packet packet, ObjectOutputStream oos){
+	CompileThread(Packet packet, HashMap<String, ObjectOutputStream> hashMap){
 		
 		String filePath = null;
 		String renameFilePath = null;
@@ -304,8 +302,26 @@ class CompileThread extends Thread{
 					Packet resultPacket = new Packet();
 					resultPacket.setMsgType(2);
 					resultPacket.setSourceCode(stringBuffer.toString());
-					oos.writeObject(resultPacket);
-					oos.flush();
+					
+					synchronized(hashMap){
+						Collection collection = hashMap.values();
+						Iterator iter = collection.iterator();
+						try{
+							while(iter.hasNext()){
+								System.out.println("broadcasting");
+								ObjectOutputStream oos2 = (ObjectOutputStream)iter.next();
+								oos2.writeObject(resultPacket);
+								oos2.flush();
+							}
+						}
+						catch(Exception e){
+							
+						}
+					}
+					/*
+					hashMap.writeObject(resultPacket);
+					hashMap.flush();
+					*/
 					if(resultFile.exists()){
 						resultFile.delete();
 					}
