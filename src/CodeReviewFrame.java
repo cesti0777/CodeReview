@@ -257,7 +257,10 @@ public class CodeReviewFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+				finally{
+					getEditor().setEditable(false);
+					getEditor().setBackground(Color.LIGHT_GRAY);
+				}
 			}
 		});
 
@@ -374,9 +377,7 @@ public class CodeReviewFrame extends JFrame{
 				}
 			}			
 		});
-<<<<<<< HEAD
-=======
-		
+
 		this.chatInput.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -395,9 +396,6 @@ public class CodeReviewFrame extends JFrame{
 				chatInput.setText("");
 			}
 		});
-		
-		
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 	}
 	
 	public JToolBar getToolbar() {
@@ -442,12 +440,7 @@ public class CodeReviewFrame extends JFrame{
 		SelectedIndex = selectedIndex;
 	}
 	public String getChatInput() {
-<<<<<<< HEAD
-	      return chatInput.getText();
-	 }
-=======
 		return chatInput.getText();
 	}
 
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 }

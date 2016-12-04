@@ -123,21 +123,14 @@ class ServerThread extends Thread{
 					for(int i1=0;i1<arr.length;i1++){
 						System.out.println("HashMap의 id출력:"+arr[i1]);
 					}
-<<<<<<< HEAD
-				
-			
-				
 				switch(receivedPacket.getMsgType()){
-=======
-		
-				switch(packet.getMsgType()){
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
+
 				// active버튼 누르는 경우-락변수에 active한 사용자의 id가 입력된다.
 				case 4:
 					// noUser상태에서 락변수 권한 요청을 하는경우
 					// 4은 (active-요청)에디터 타이핑 권한 요청,
 					if (Server.lock.equals("noUser")) {
-<<<<<<< HEAD
+
 						Server.lock = id;
 						System.out.println("case 4  if구문 lock변수 현재 값 확인 " + Server.lock);
 						//9은 (active-정상응답)
@@ -152,16 +145,7 @@ class ServerThread extends Thread{
 						
 
 					} else {
-=======
 
-						Server.lock=id;
-						System.out.println("case 4  if구문 lock변수 현재 값 확인 "+Server.lock);
-						broadcastDeactivateMsg(id);
-						
-
-					} else {
-
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 						// 누가 사용중 상황에서 락변수 권한 요청을 하는 경우
 						// 7은 (active-비정상응답)active 요청시 누군가 사용중이라는 alert창에 대한
 						
@@ -176,27 +160,14 @@ class ServerThread extends Thread{
 						responsePacket.setMsgType(7);
 						responsePacket.setSourceCode(Server.lock);
 						output.writeObject(responsePacket);
-						
 
-<<<<<<< HEAD
-=======
-
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 					}
 					break;
 				// deactive버튼 누르는 경우- 락변수가 풀리면서 그동안 수정한 내용들이 모든 사용자들에게 전송된다.
 				////5는 (deactive-요청)에디터 타이핑 후 권한 반납 요청 및 타이핑한 메시지가 전체클라이언트에게 전송되어짐.,
 				case 5:
 					if (Server.lock.equals(id)) {
-<<<<<<< HEAD
-						
-						// 락변수의 사용자의 ID와 일치하면 락을 분다 & 소스코드 내용들이 모든 사용자들에게 전송된다.
-						System.out.println("case 5 if구문 락을 해제하려는 사용자:" + id);
-						Server.lock = "noUser";
-						System.out.println("해제된 lock상태" + Server.lock);
-						
-						
-=======
+
 
 					//락변수의 사용자의 ID와 일치하면 락을 분다
 						System.out.println("case 5 if구문 락을 해제하려는 사용자:"+id);
@@ -204,7 +175,6 @@ class ServerThread extends Thread{
 						System.out.println("해제된 lock상태"+Server.lock);
 						broadcastActivateMsg(id);
 
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 						Set<String> sendTargets=hashMap.keySet();
 						//String[] arr=(String[])keys.toArray();
 						Object[] array=sendTargets.toArray();
@@ -233,17 +203,11 @@ class ServerThread extends Thread{
 
 					}
 					break;
-<<<<<<< HEAD
+	
+					//채팅 
+					case 1:
+						chatBroadcast(receivedPacket);
 
-					//채팅 
-					case 1:
-						broadcast(receivedPacket);
-=======
-						
-					//채팅 
-					case 1:
-						chatBroadcast(packet);
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 						break;
 					
 					//컴파일

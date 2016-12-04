@@ -1,6 +1,6 @@
-<<<<<<< HEAD
+
 import java.awt.Color;
-=======
+
 
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -11,7 +11,6 @@ import java.awt.Panel;
 import java.awt.TextArea;
 import java.awt.TextField;
 
->>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
@@ -115,6 +114,9 @@ class InputThread extends Thread {
 					break;
 				case 6:
 					System.out.println("case6입니다 :"+packet);
+					//제발되라
+					crf.getEditor().setEditable(false);
+					crf.getEditor().setBackground(Color.LIGHT_GRAY);
 					
 					crf.setEditor(packet.getSourceCode());
 					break;
