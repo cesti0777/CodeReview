@@ -20,15 +20,16 @@ import java.net.*;
 
 public class CodeReviewFrame extends JFrame{
 	
-	//패널 컴포넌트 
+	//�뙣�꼸 而댄룷�꼳�듃 
 	private JTextArea editor;
 	private JTextArea console;
 	private JTextArea people;
 	private JTextArea chattingBox;
 	
-	//툴바 컴포넌트 
+	//�댋諛� 而댄룷�꼳�듃 
 	private JToolBar toolbar;
 	private JComboBox combo;
+	private JComboBox fontSizeCombo;
 	private JButton newButton ;
 	private JButton openButton ;
 	private JButton saveButton;
@@ -38,6 +39,7 @@ public class CodeReviewFrame extends JFrame{
 	private JButton editDeactive;
 	private JTextField chatInput;
 
+<<<<<<< HEAD
 	public JTextField getChatInput() {
 		return chatInput;
 	}
@@ -46,13 +48,16 @@ public class CodeReviewFrame extends JFrame{
 		this.chatInput = chatInput;
 	}
 	//서버와 입출력을 할 소켓정보
+=======
+	//�꽌踰꾩� �엯異쒕젰�쓣 �븷 �냼耳볦젙蹂�
+>>>>>>> b990c327bb222a29140cb257f5bb4d5d19f50fb6
 	ObjectOutputStream oos ;
 	
 	//Client클래스로부터 날라온 id
 	private String id;
-	
+		
 	public CodeReviewFrame(ObjectOutputStream oos, String id){
-		//id연결
+			//id연결
 		this.id=id;
 		//소켓연결 
 		try{
@@ -66,7 +71,7 @@ public class CodeReviewFrame extends JFrame{
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
 		
-		//Editor, Console, People, chatting이 있는 패
+		//Editor, Console, People, chatting�씠 �엳�뒗 �뙣
 		JPanel centerPanel = new JPanel();
 		centerPanel.setLayout(null);
 
@@ -85,10 +90,12 @@ public class CodeReviewFrame extends JFrame{
 		//Editor
 		sp_editor.setLocation(30,50);
 		sp_editor.setSize(900,580);
-
+		editor.setTabSize(3);
+		
 		//Console
 		sp_console.setLocation(30, 670);
 		sp_console.setSize(900, 250);
+		console.setFont(new Font(console.getName(), Font.PLAIN, 16));
 		
 		//People
 		sp_people.setLocation(960, 50);
@@ -136,7 +143,7 @@ public class CodeReviewFrame extends JFrame{
 		centerPanel.add(consoleLabel);
 		centerPanel.add(chattingBoxLabel);
 
-		// 여기까지가 패널 디자인
+		// �뿬湲곌퉴吏�媛� �뙣�꼸 �뵒�옄�씤
 		//--------------------------------------------------------------------//
 		
 		
@@ -146,12 +153,10 @@ public class CodeReviewFrame extends JFrame{
 		openButton = new JButton("Open");
 		saveButton = new JButton("Save");
 		saveAsButton = new JButton("Save As");
-		compileButton = new JButton("Compile");
+		compileButton = new JButton("Run");
 		editActive = new JButton("Activate");
 		editDeactive = new JButton("Deactivate");
 
-		JLabel label = new JLabel("Editor");
-		
 		toolbar.add(newButton);
 		toolbar.add(openButton);
 		toolbar.add(saveButton);
@@ -160,13 +165,30 @@ public class CodeReviewFrame extends JFrame{
 		toolbar.addSeparator();
 		toolbar.addSeparator();
 		
-		toolbar.add(label);
+		toolbar.add(new JLabel("Editor"));
 		toolbar.add(editActive);
 		toolbar.add(editDeactive);
 		toolbar.addSeparator();
 		toolbar.addSeparator();
+
+		
+		toolbar.add(new JLabel("Font Size"));
+		toolbar.addSeparator();	
+		fontSizeCombo = new JComboBox();
+		fontSizeCombo.addItem("12");
+		fontSizeCombo.addItem("13");
+		fontSizeCombo.addItem("14");
+		fontSizeCombo.addItem("15");
+		fontSizeCombo.addItem("16");
+		fontSizeCombo.addItem("17");
+		fontSizeCombo.addItem("18");
+		fontSizeCombo.addItem("19");
+		toolbar.add(fontSizeCombo);
+		toolbar.addSeparator();
 		toolbar.addSeparator();
 		
+		toolbar.add(new JLabel("Compile"));
+		toolbar.addSeparator();	
 		combo = new JComboBox();
 		combo.addItem("C");
 		combo.addItem("C++");
@@ -175,11 +197,13 @@ public class CodeReviewFrame extends JFrame{
 		toolbar.add(combo);
 		toolbar.addSeparator();
 		toolbar.add(compileButton);
+		
+		
 
 		for(int i = 0; i<200; ++i){
 			toolbar.addSeparator();
 		}		
-		//여기까지 툴바 디자인
+		//�뿬湲곌퉴吏� �댋諛� �뵒�옄�씤
 		//--------------------------------------------------------------------//
 		getContentPane().add(toolbar, BorderLayout.NORTH);
 		getContentPane().add(centerPanel, BorderLayout.CENTER);
@@ -188,66 +212,63 @@ public class CodeReviewFrame extends JFrame{
 		setSize(1440, 1000);
 		setVisible(true);
 	}
-	
 	public void addListener(){
-		//active버튼 클릭
-				this.editActive.addActionListener(new ActionListener(){
+		this.editActive.addActionListener(new ActionListener(){
 
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						// TODO Auto-generated method stub
-						Packet packet = new Packet();
-						packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
-						packet.setMsgType(4);
-						packet.setActivateSignal(true);
-						
-						try {
-							oos.writeObject(packet);
-							oos.flush();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-						
-						
-					}
-					
-				});
-				//deactive버튼 클릭
-				this.editDeactive.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Packet packet = new Packet();
+				packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
+				packet.setMsgType(4);
+				packet.setActivateSignal(true);
+				
+				try {
+					oos.writeObject(packet);
+					oos.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+			}
+			
+		});
+		//deactive버튼 클릭
+		this.editDeactive.addActionListener(new ActionListener(){
 
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-						Packet packet = new Packet();
-						packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
-						packet.setMsgType(5);
-						packet.setActivateSignal(false);
-						
-						try {
-							oos.writeObject(packet);
-							oos.flush();
-						} catch (IOException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-						
-					}
-					
-				});
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				Packet packet = new Packet();
+				packet.setId(id);//지빈이가 입력한 userId 들어가야할 부분.
+				packet.setMsgType(5);
+				packet.setActivateSignal(false);
+				
+				try {
+					oos.writeObject(packet);
+					oos.flush();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 
 		this.compileButton.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Packet packet = new Packet();
 				packet.setMsgType(2);
-				packet.setSourceCode(getEditor());
+				packet.setSourceCode(getEditor().getText());
 				packet.setLang(getCombo().getSelectedIndex());
 				
 				
 				try{
-					//컴파일할 파일정보 보내기
+					//而댄뙆�씪�븷 �뙆�씪�젙蹂� 蹂대궡湲�
 					oos.writeObject(packet);
 					oos.flush();
 				}
@@ -255,10 +276,99 @@ public class CodeReviewFrame extends JFrame{
 					System.out.println(e1);
 				}
 				
-				//TO DO : 서버로 보내기
+				//TO DO : �꽌踰꾨줈 蹂대궡湲�
 			}
 		});
+		
+		this.combo.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JComboBox combo = (JComboBox)e.getSource();
+				String basicCode;
+				switch(combo.getSelectedIndex()){
+				
+				case 0 :
+					basicCode = "#include <stdio.h>\n"
+							+ "int main(void){\n\n"
+							+ "    printf(\"hello C\");\n\n"
+							+ "    return 0;\n"
+							+ "}";
+					setEditor(basicCode);
+					break;
+				case 1 : 
+					basicCode = "#include <iostream>\n"
+							+ "using namespace std;\n"
+							+ "int main(void){\n\n"
+							+ "    cout<<\"hello C++\"<<endl;\n\n"
+							+ "    return 0;\n\n"
+							+ "}";
+					
+					setEditor(basicCode);
+					break;
+				case 2 : 
+					basicCode = "print(\"Hello pyhon\");";
+					setEditor(basicCode);
+					break;
+				case 3 : 
+					basicCode = "public class MyClass {\n"
+							+ "    public static void main(String args[]){\n\n"
+							+ "    System.out.println(\"Hello Java\");\n\n"
+							+ "    }\n"
+							+ "}";
+					setEditor(basicCode);
+					break;
+				}
+			}
+		});
+		
+		this.fontSizeCombo.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				JComboBox combo = (JComboBox)e.getSource();
+				
+				switch(combo.getSelectedIndex()){
+
+				case 0:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 12));
+					break;
+
+				case 1:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 13));
+					break;
+
+				case 2:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 14));
+					break;
+
+				case 3:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 15));
+					break;
+
+				case 4:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 16));
+					break;
+
+				case 5:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 17));
+					break;
+
+				case 6:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 18));
+					break;
+
+				case 7:
+					getEditor().setFont(new Font(getEditor().getName(), Font.PLAIN, 19));
+					break;
+					
+				}
+			}			
+		});
 	}
+	
 	public JToolBar getToolbar() {
 		return toolbar;
 	}
@@ -271,23 +381,25 @@ public class CodeReviewFrame extends JFrame{
 	public void setCombo(JComboBox combo) {
 		this.combo = combo;
 	}
-	public String getEditor() {
-		return editor.getText();
+	public JTextArea getEditor() {
+		return editor;
 	}
 	public void setEditor(String str) {
+		this.editor.setText("");
 		this.editor.append(str);
 	}
 	public String getConsole() {
 		return console.getText();
 	}
 	public void setConsole(String str) {
-		this.console.append(str);;
+		this.console.setText("");
+		this.console.append(str);
 	}
 	public String getPeople() {
 		return people.getText();
 	}
 	public void setPeople(String people) {
-		this.people.append(people);;
+		this.people.append(people);
 	}
 	public void setChattingBox(String str) {
 		this.chattingBox.append(str);;
