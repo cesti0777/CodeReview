@@ -21,11 +21,6 @@ public class Server {
 	static{
 		lock = "noUser";
 	}
-	
-
-
-	
-
 
 	public static void main(String[] args) {
 		
@@ -140,9 +135,14 @@ class ServerThread extends Thread{
 						System.out.println("case 4  if구문 lock변수 현재 값 확인 " + Server.lock);
 
 					} else {
+<<<<<<< HEAD
 						// 누가 사용중 상황에서 락변수 권한 요청을 하는 경우
 						System.out.println("case 4  else구문 lock변수 현재 값 확인 " + Server.lock);
 
+=======
+						//누가 사용중이다. 
+						System.out.println("case 4  else구문 lock변수 현재 값 확인 "+Server.lock);
+>>>>>>> 1be7e5c147825f9b4260e1f3df21d451b3c4c878
 					}
 					break;
 				// deactive버튼 누르는 경우- 락변수가 풀리면서 그동안 수정한 내용들이 모든 사용자들에게 전송된다.
@@ -174,6 +174,7 @@ class ServerThread extends Thread{
 
 					}
 					break;
+<<<<<<< HEAD
 
 				// 채팅
 				case 1:
@@ -183,6 +184,18 @@ class ServerThread extends Thread{
 				case 2:
 					new CompileThread(packet, oos);
 					break;
+=======
+						
+					//채팅 
+					case 1:
+						broadcast(packet);
+						break;
+					
+					//컴파일
+					case 2:
+						new CompileThread(packet, hashMap);
+						break;
+>>>>>>> 1be7e5c147825f9b4260e1f3df21d451b3c4c878
 				}
 			}
 		}
@@ -256,7 +269,7 @@ class ServerThread extends Thread{
 
 class CompileThread extends Thread{
 	
-	CompileThread(Packet packet, ObjectOutputStream oos){
+	CompileThread(Packet packet, HashMap<String, ObjectOutputStream> hashMap){
 		
 		String filePath = null;
 		String renameFilePath = null;
@@ -345,8 +358,26 @@ class CompileThread extends Thread{
 					Packet resultPacket = new Packet();
 					resultPacket.setMsgType(2);
 					resultPacket.setSourceCode(stringBuffer.toString());
-					oos.writeObject(resultPacket);
-					oos.flush();
+					
+					synchronized(hashMap){
+						Collection collection = hashMap.values();
+						Iterator iter = collection.iterator();
+						try{
+							while(iter.hasNext()){
+								System.out.println("broadcasting");
+								ObjectOutputStream oos2 = (ObjectOutputStream)iter.next();
+								oos2.writeObject(resultPacket);
+								oos2.flush();
+							}
+						}
+						catch(Exception e){
+							
+						}
+					}
+					/*
+					hashMap.writeObject(resultPacket);
+					hashMap.flush();
+					*/
 					if(resultFile.exists()){
 						resultFile.delete();
 					}

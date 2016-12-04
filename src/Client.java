@@ -1,25 +1,12 @@
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Frame;
-import java.awt.Label;
-import java.awt.Panel;
-import java.awt.TextArea;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.swing.JOptionPane;
 
-public class Client {
+public class Client implements ActionListener{
 	public static void main(String[] args) {
 
 		Socket sock = null;
@@ -49,8 +36,6 @@ public class Client {
 
 			System.out.println("메세지 보내기 성공");
 
-
-
 			InputThread it = new InputThread(sock, ois, frame);
 			it.start();
 
@@ -58,6 +43,12 @@ public class Client {
 			System.out.println(e);
 
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 //test
@@ -71,7 +62,7 @@ class InputThread extends Thread {
 		this.ois = ois;
 		this.crf = crf;
 	}
-
+//
 	public void run() {
 
 		Packet packet;
@@ -88,6 +79,7 @@ class InputThread extends Thread {
 
 				// 채팅
 				case 1:
+					crf.setChattingBox(packet.getCh());
 					break;
 
 				// 컴파일
