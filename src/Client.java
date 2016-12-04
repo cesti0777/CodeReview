@@ -61,7 +61,7 @@ class InputThread extends Thread {
 		this.ois = ois;
 		this.crf = crf;
 	}
-
+//
 	public void run() {
 
 		Packet packet;
