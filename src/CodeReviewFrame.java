@@ -36,7 +36,15 @@ public class CodeReviewFrame extends JFrame{
 	private JButton compileButton;
 	private JButton editActive;
 	private JButton editDeactive;
+	private JTextField chatInput;
 
+	public JTextField getChatInput() {
+		return chatInput;
+	}
+
+	public void setChatInput(JTextField chatInput) {
+		this.chatInput = chatInput;
+	}
 	//서버와 입출력을 할 소켓정보
 	ObjectOutputStream oos ;
 	
@@ -96,7 +104,7 @@ public class CodeReviewFrame extends JFrame{
 		centerPanel.add(sp_chattingBox);
 		
 		//Chatting Input Box
-		JTextField chatInput = new JTextField(20);
+		chatInput = new JTextField(20);
 		chatInput.setLocation(960, 890);
 		chatInput.setSize(450, 30);
 		centerPanel.add(chatInput);

@@ -38,7 +38,7 @@ public class Client {
 			oos = new ObjectOutputStream(sock.getOutputStream());
 			ois = new ObjectInputStream(sock.getInputStream());
 			frame = new CodeReviewFrame(oos,name);
-
+			
 			//접속자 id를 알려 주는 패킷
 			Packet packet = new Packet();
 			packet.setMsgType(3);
