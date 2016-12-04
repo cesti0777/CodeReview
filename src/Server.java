@@ -134,6 +134,7 @@ class ServerThread extends Thread{
 						
 					//채팅 
 					case 1:
+						broadcast(packet);
 						break;
 					
 					//컴파일
