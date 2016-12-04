@@ -103,15 +103,14 @@ class ServerThread extends Thread{
 					for(int i1=0;i1<arr.length;i1++){
 						System.out.println("HashMap의 id출력:"+arr[i1]);
 					}
-				
-			
-				
+		
 				switch(packet.getMsgType()){
 				//에디터 타이핑 
 				case 4:
 					if (Server.lock.equals("noUser")) {
 						Server.lock=id;
 						System.out.println("case 4  if구문 lock변수 현재 값 확인 "+Server.lock);
+						broadcastDeactivateMsg(id);
 						
 					} else {
 						//누가 사용중이다. 
@@ -124,7 +123,7 @@ class ServerThread extends Thread{
 						System.out.println("case 5 if구문 락을 해제하려는 사용자:"+id);
 						Server.lock="noUser";
 						System.out.println("해제된 lock상태"+Server.lock);
-
+						broadcastActivateMsg(id);
 					} else {
 					//일치하지않는경우 워닝 메시지를 보내자.
 
@@ -200,8 +199,58 @@ class ServerThread extends Thread{
 			catch(Exception e){
 				
 			}
-		}
+		}	
 	}
+	
+	public void broadcastDeactivateMsg(String id){
+		synchronized(hashMap){
+			Collection collection = hashMap.values();
+			Iterator iter = collection.iterator();
+			try{
+				Set<String> keys=hashMap.keySet();
+				//String[] arr=(String[])keys.toArray();
+				Object[] arr=keys.toArray();
+				for(int i1=0;i1<arr.length;i1++){
+					if(!id.equals(arr[i1])){
+						Packet pkt = new Packet();
+						pkt.setActivateSignal(false);
+						pkt.setMsgType(4);
+						ObjectOutputStream oos = (ObjectOutputStream)iter.next();
+						oos.writeObject(pkt);
+						oos.flush();
+					}
+				}
+			}
+			catch(Exception e){
+				
+			}
+		}	
+	}
+	public void broadcastActivateMsg(String id){
+		synchronized(hashMap){
+			Collection collection = hashMap.values();
+			Iterator iter = collection.iterator();
+			try{
+				Set<String> keys=hashMap.keySet();
+				//String[] arr=(String[])keys.toArray();
+				Object[] arr=keys.toArray();
+				for(int i1=0;i1<arr.length;i1++){
+					if(!id.equals(arr[i1])){
+						Packet pkt = new Packet();
+						pkt.setActivateSignal(true);
+						pkt.setMsgType(5);
+						ObjectOutputStream oos = (ObjectOutputStream)iter.next();
+						oos.writeObject(pkt);
+						oos.flush();
+					}
+				}
+			}
+			catch(Exception e){
+				
+			}
+		}	
+	}
+	
 	public void CompileProcess(Packet packet){
 		// 클라이언트로 부터 전달 받은 패킷에서 
 		// 코드부분을 따로 파일로 저장

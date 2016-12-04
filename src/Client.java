@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Label;
 import java.awt.Panel;
@@ -48,12 +49,11 @@ public class Client {
 
 			System.out.println("메세지 보내기 성공");
 
-			InputThread it = new InputThread(sock, ois, frame);
+			InputThread it = new InputThread(sock, ois, frame, name);
 			it.start();
 
 		} catch (Exception e) {
 			System.out.println(e);
-
 		}
 	}
 }
@@ -62,11 +62,12 @@ class InputThread extends Thread {
 	private Socket sock;
 	private ObjectInputStream ois;
 	private CodeReviewFrame crf;
-
-	InputThread(Socket sock, ObjectInputStream ois, CodeReviewFrame crf) {
+	private String name;
+	InputThread(Socket sock, ObjectInputStream ois, CodeReviewFrame crf, String name) {
 		this.sock = sock;
 		this.ois = ois;
 		this.crf = crf;
+		this.name = name;
 	}
 
 	public void run() {
@@ -75,7 +76,6 @@ class InputThread extends Thread {
 		String code;
 
 		try {
-
 			while ((packet = (Packet) ois.readObject()) != null) {
 				switch (packet.getMsgType()) {
 
@@ -94,10 +94,16 @@ class InputThread extends Thread {
 				case 3:
 					crf.setPeople(packet.getId());
 					break;
-
+				case 4:
+					crf.getEditor().setEditable(false);
+					crf.getEditor().setBackground(Color.lightGray);
+					break;
+				case 5:
+					crf.getEditor().setEditable(true);
+					break;
 				}
 			}
-
+			
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
