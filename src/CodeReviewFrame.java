@@ -459,7 +459,7 @@ public class CodeReviewFrame extends JFrame{
 		return people.getText();
 	}
 	public void setPeople(String people) {
-		this.people.append(people);
+		this.people.setText(people);
 	}
 	public void setChattingBox(String str) {
 		this.chattingBox.append(str);;

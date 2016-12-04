@@ -99,7 +99,7 @@ class InputThread extends Thread {
 					crf.setConsole(packet.getSourceCode());
 					break;
 				case 3:
-					crf.setPeople(packet.getId()+"\n");
+					crf.setPeople(packet.getPeoples());
 					break;
 
 				case 4:
@@ -136,6 +136,9 @@ class InputThread extends Thread {
 					crf.getEditor().setEditable(true);
 					crf.getEditor().setBackground(Color.WHITE);
 					break;
+				case 10:
+					System.out.println("case10입니다 :"+packet);
+					
 				}
 			}
 		} catch (Exception e) {

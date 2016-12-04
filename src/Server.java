@@ -54,6 +54,7 @@ public class Server {
 class ServerThread extends Thread{
 	private Socket sock;
 	private String id;
+	
 	private ObjectInputStream ois;
 	private ObjectOutputStream oos;
 	private HashMap<String, ObjectOutputStream> hashMap;
@@ -63,6 +64,7 @@ class ServerThread extends Thread{
 		
 		this.sock = sock;
 		this.hashMap = hm; 
+		String peoples = "";
 
 		try{
 			
@@ -71,21 +73,32 @@ class ServerThread extends Thread{
 			
 			Packet packet = (Packet)ois.readObject();
 			id = packet.getId();
+			synchronized(hashMap){
+				hashMap.put(id,  oos);
+			}
+			
+			Set<String> keys=hashMap.keySet();
+			//String[] arr=(String[])keys.toArray();
+			Object[] arr=keys.toArray();
+			for(int i1=0;i1<arr.length;i1++){
+				peoples = peoples +arr[i1]+"\n" ;
+			}
 			
 			System.out.println("접속한 사용자의 아이디는 " + id +"입니다 ");
 			
 			Packet broadcastPacket = new Packet();
 			broadcastPacket.setMsgType(3);
 			broadcastPacket.setId(id);
+			broadcastPacket.setPeoples(peoples);
 			broadcast(broadcastPacket);
+			
+			//System.out.println(broadcastPacket);
 			System.out.println("send broadcastPacket");
 			
-			/*
-			 * 
-			 */
-			synchronized(hashMap){
-				hashMap.put(id,  oos);
-			}
+			
+			
+
+			
 			initFlag = true;
 		}
 		catch(Exception e){
@@ -222,14 +235,24 @@ class ServerThread extends Thread{
 			System.out.println(e);
 		}
 		finally{
+			String peoples = "";
+			
 			synchronized(hashMap){
 				hashMap.remove(id);
 			}
 			
-			Packet endMessagePacket = new Packet();
+			Set<String> keys=hashMap.keySet();
+			//String[] arr=(String[])keys.toArray();
+			Object[] arr=keys.toArray();
+			for(int i1=0;i1<arr.length;i1++){
+				peoples = peoples +arr[i1]+"\n" ;
+			}
 			
-			endMessagePacket.setSourceCode(id+"님이 종료하였습니다.");
+			Packet endMessagePacket = new Packet();
+			endMessagePacket.setMsgType(3);
+			endMessagePacket.setPeoples(peoples);
 			broadcast(endMessagePacket);
+			
 			try{
 				if(sock != null){
 					sock.close();
@@ -262,8 +285,6 @@ class ServerThread extends Thread{
 			Collection collection = hashMap.values();
 			Iterator iter = collection.iterator();
 			try{
-				oos.writeObject(packet);
-				oos.flush();
 				
 				while(iter.hasNext()){
 					System.out.println("packet Message Type" + packet.getMsgType());
@@ -339,11 +360,12 @@ class ServerThread extends Thread{
 	               //String[] arr=(String[])keys.toArray();
 	               Object[] arr=keys.toArray();
 	               for(int i1=0;i1<arr.length;i1++){
-	                  if(!arr[i1].equals(packet.getId()))
+	                  if(!arr[i1].equals(packet.getId())){
 	                     System.out.println("packet Message Type" + packet.getMsgType());
 	                     ObjectOutputStream oos2 = (ObjectOutputStream)iter.next();
 	                     oos2.writeObject(packet);
 	                     oos2.flush();
+	                  }
 	               }
 	            }
 	         }
@@ -352,6 +374,7 @@ class ServerThread extends Thread{
 	         }
 	      }
 	   }
+	
 	public void CompileProcess(Packet packet){
 		// 클라이언트로 부터 전달 받은 패킷에서 
 		// 코드부분을 따로 파일로 저장
