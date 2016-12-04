@@ -25,7 +25,7 @@ public class Packet implements Serializable{
 	private int lang;
 	private int msgType ;
 	private String id;	
-	private char ch;	 
+	private String ch;	 
 	private boolean activateSignal; 
 	private String sourceCode;
 	
@@ -47,10 +47,10 @@ public class Packet implements Serializable{
 	public void setId(String id) {
 		this.id = id;
 	}
-	public char getCh() {
+	public String getCh() {
 		return ch;
 	}
-	public void setCh(char ch) {
+	public void setCh(String ch) {
 		this.ch = ch;
 	}
 	public boolean isActivateSignal() {

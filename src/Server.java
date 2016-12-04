@@ -22,11 +22,6 @@ public class Server {
 		lock = "noUser";
 	}
 	
-
-
-	
-
-
 	public static void main(String[] args) {
 		
 		try{

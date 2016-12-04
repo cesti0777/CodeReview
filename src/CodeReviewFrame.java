@@ -37,6 +37,7 @@ public class CodeReviewFrame extends JFrame{
 	private JButton compileButton;
 	private JButton editActive;
 	private JButton editDeactive;
+	private JTextField chatInput;
 
 	//�꽌踰꾩� �엯異쒕젰�쓣 �븷 �냼耳볦젙蹂�
 	ObjectOutputStream oos ;
@@ -44,6 +45,7 @@ public class CodeReviewFrame extends JFrame{
 	//Client클래스로부터 날라온 id
 	private String id;
 		
+
 	public CodeReviewFrame(ObjectOutputStream oos, String id){
 			//id연결
 		this.id=id;
@@ -99,7 +101,7 @@ public class CodeReviewFrame extends JFrame{
 		centerPanel.add(sp_chattingBox);
 		
 		//Chatting Input Box
-		JTextField chatInput = new JTextField(20);
+		chatInput = new JTextField(20);
 		chatInput.setLocation(960, 890);
 		chatInput.setSize(450, 30);
 		centerPanel.add(chatInput);
@@ -355,6 +357,32 @@ public class CodeReviewFrame extends JFrame{
 				}
 			}			
 		});
+		
+		this.chatInput.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				Packet packet = new Packet();
+				packet.setCh(chatInput.getText());//지빈이가 입력한 userId 들어가야할 부분.
+				packet.setMsgType(1);
+				chattingBox.setText(chatInput.getText());
+				
+				try {
+					oos.writeObject(packet);
+					oos.flush();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				
+				
+			}
+			
+		});
+		
+		
 	}
 	
 	public JToolBar getToolbar() {
@@ -392,4 +420,8 @@ public class CodeReviewFrame extends JFrame{
 	public void setChattingBox(String str) {
 		this.chattingBox.append(str);;
 	}
+	public String getChatInput() {
+		return chatInput.getText();
+	}
+	
 }
