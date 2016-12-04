@@ -1,4 +1,17 @@
+<<<<<<< HEAD
 import java.awt.Color;
+=======
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Label;
+import java.awt.Panel;
+import java.awt.TextArea;
+import java.awt.TextField;
+
+>>>>>>> d86e35bb65df470dacd1954e5519f868066fd480
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.ObjectInputStream;
@@ -37,12 +50,11 @@ public class Client implements ActionListener{
 
 			System.out.println("메세지 보내기 성공");
 
-			InputThread it = new InputThread(sock, ois, frame);
+			InputThread it = new InputThread(sock, ois, frame, name);
 			it.start();
 
 		} catch (Exception e) {
 			System.out.println(e);
-
 		}
 	}
 
@@ -57,20 +69,20 @@ class InputThread extends Thread {
 	private Socket sock;
 	private ObjectInputStream ois;
 	private CodeReviewFrame crf;
-
-	InputThread(Socket sock, ObjectInputStream ois, CodeReviewFrame crf) {
+	private String name;
+	InputThread(Socket sock, ObjectInputStream ois, CodeReviewFrame crf, String name) {
 		this.sock = sock;
 		this.ois = ois;
 		this.crf = crf;
+		this.name = name;
 	}
-//
+
 	public void run() {
 
 		Packet packet;
 		String code;
 
 		try {
-
 			while ((packet = (Packet) ois.readObject()) != null) {
 				switch (packet.getMsgType()) {
 
@@ -80,7 +92,7 @@ class InputThread extends Thread {
 
 				// 채팅
 				case 1:
-					crf.setChattingBox(packet.getCh());
+					crf.setChattingBox(packet.getId()+": "+packet.getCh()+"\n");
 					break;
 
 				// 컴파일
@@ -88,9 +100,17 @@ class InputThread extends Thread {
 					crf.setConsole(packet.getSourceCode());
 					break;
 				case 3:
-					crf.setPeople(packet.getId());
+					crf.setPeople(packet.getId()+"\n");
 					break;
+
+				case 4:
+					crf.getEditor().setEditable(false);
+					crf.getEditor().setBackground(Color.lightGray);
+					break;
+
 				case 5:
+					crf.getEditor().setEditable(true);
+					crf.getEditor().setBackground(Color.white);
 					System.out.println("case5:"+packet);
 					break;
 				case 6:
@@ -116,7 +136,7 @@ class InputThread extends Thread {
 
 				}
 			}
-
+			
 		} catch (Exception e) {
 			System.out.println(e);
 		} finally {
