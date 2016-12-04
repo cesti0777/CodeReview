@@ -364,16 +364,14 @@ public class CodeReviewFrame extends JFrame{
 			}			
 		});
 		
-		this.chatInput.addActionListener(new ActionListener(){
-
+		this.chatInput.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
 				Packet packet = new Packet();
-				packet.setCh(chatInput.getText());//지빈이가 입력한 userId 들어가야할 부분.
+				packet.setCh(chatInput.getText());// 吏�鍮덉씠媛� �엯�젰�븳 userId �뱾�뼱媛��빞�븷 遺�遺�.
 				packet.setMsgType(1);
-				chattingBox.setText(chatInput.getText());
-				
+				packet.setId(id);
 				try {
 					oos.writeObject(packet);
 					oos.flush();
@@ -381,11 +379,8 @@ public class CodeReviewFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				
-				
+				chatInput.setText("");
 			}
-			
 		});
 		
 		

@@ -176,7 +176,7 @@ class ServerThread extends Thread{
 						
 					//채팅 
 					case 1:
-						broadcast(packet);
+						chatBroadcast(packet);
 						break;
 					
 					//컴파일
@@ -295,7 +295,32 @@ class ServerThread extends Thread{
 			}
 		}	
 	}
-	
+	public void chatBroadcast(Packet packet){
+	      synchronized(hashMap){
+	         Collection collection = hashMap.values();
+	         Iterator iter = collection.iterator();
+	         try{
+	            
+	            
+	            while(iter.hasNext()){
+	               
+	               Set<String> keys=hashMap.keySet();
+	               //String[] arr=(String[])keys.toArray();
+	               Object[] arr=keys.toArray();
+	               for(int i1=0;i1<arr.length;i1++){
+	                  if(!arr[i1].equals(packet.getId()))
+	                     System.out.println("packet Message Type" + packet.getMsgType());
+	                     ObjectOutputStream oos2 = (ObjectOutputStream)iter.next();
+	                     oos2.writeObject(packet);
+	                     oos2.flush();
+	               }
+	            }
+	         }
+	         catch(Exception e){
+	            
+	         }
+	      }
+	   }
 	public void CompileProcess(Packet packet){
 		// 클라이언트로 부터 전달 받은 패킷에서 
 		// 코드부분을 따로 파일로 저장

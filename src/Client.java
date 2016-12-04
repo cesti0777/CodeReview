@@ -88,7 +88,7 @@ class InputThread extends Thread {
 
 				// 채팅
 				case 1:
-					crf.setChattingBox(packet.getCh());
+					crf.setChattingBox(packet.getId()+": "+packet.getCh()+"\n");
 					break;
 
 				// 컴파일
@@ -96,7 +96,7 @@ class InputThread extends Thread {
 					crf.setConsole(packet.getSourceCode());
 					break;
 				case 3:
-					crf.setPeople(packet.getId());
+					crf.setPeople(packet.getId()+"\n");
 					break;
 
 				case 4:
