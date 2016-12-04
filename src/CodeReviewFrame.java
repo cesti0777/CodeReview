@@ -3,22 +3,24 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JToolBar;
-
-import java.lang.*;
-import java.util.*;
-import java.io.*;
-import java.net.*;
 
 public class CodeReviewFrame extends JFrame{
 	
@@ -59,6 +61,11 @@ public class CodeReviewFrame extends JFrame{
 		catch(Exception e){
 			
 		}
+		/*
+		 * X누르면 종료되도록 구현
+		 */
+		WindowCloseListener  windowCloseListener = new WindowCloseListener(this);
+		this.addWindowListener(windowCloseListener);
 		
 		setTitle("CodeReview");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -315,7 +322,7 @@ public class CodeReviewFrame extends JFrame{
 					setEditor(basicCode);
 					break;
 				case 2 : 
-					basicCode = "print(\"Hello pyhon\");";
+					basicCode = "print(\"Hello python\");";
 					setEditor(basicCode);
 					break;
 				case 3 : 
@@ -406,7 +413,22 @@ public class CodeReviewFrame extends JFrame{
 			}
 		});
 	}
-	
+	class WindowCloseListener extends WindowAdapter
+	{
+		private CodeReviewFrame codeReviewFrame;
+		public WindowCloseListener(CodeReviewFrame codeReviewFrame)
+		{
+				this.codeReviewFrame = codeReviewFrame;
+
+		}
+		public void windowClosing(WindowEvent e)
+		{
+			System.out.println("여기");
+				this.codeReviewFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				this.codeReviewFrame.dispose();
+				//controller.saveRegisterFolderDAO();
+		}
+	}
 	public JToolBar getToolbar() {
 		return toolbar;
 	}
