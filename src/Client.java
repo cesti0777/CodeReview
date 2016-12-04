@@ -48,8 +48,6 @@ public class Client {
 
 			System.out.println("메세지 보내기 성공");
 
-
-
 			InputThread it = new InputThread(sock, ois, frame);
 			it.start();
 

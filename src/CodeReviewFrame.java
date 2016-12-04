@@ -217,12 +217,8 @@ public class CodeReviewFrame extends JFrame{
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				
-				
-				
+				}	
 			}
-			
 		});
 		//deactive버튼 클릭
 		this.editDeactive.addActionListener(new ActionListener(){
@@ -242,7 +238,6 @@ public class CodeReviewFrame extends JFrame{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
 			}
 		});
 
