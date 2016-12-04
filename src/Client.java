@@ -60,7 +60,6 @@ public class Client {
 		}
 	}
 }
-
 class InputThread extends Thread {
 	private Socket sock;
 	private ObjectInputStream ois;
