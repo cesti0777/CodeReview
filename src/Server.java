@@ -21,13 +21,18 @@ public class Server {
 	static{
 		lock = "noUser";
 	}
+
 	public static void main(String[] args) {
 		
 		try{
 			
 			ServerSocket server = new ServerSocket(11002);
 			System.out.println("접속을 기다립니다");
-			HashMap hashMap = new HashMap();
+			/*
+			 * HashMap의 Key는 id, Value는 ObjectOutputStream입니다.
+			 */
+			HashMap<String, ObjectOutputStream> hashMap = new HashMap<String, ObjectOutputStream>();
+			//ArrayList<ClientInfo> clientList=new ArrayList<ClientInfo>();
 			while(true){
 				
 				Socket sock = server.accept();
@@ -75,6 +80,9 @@ class ServerThread extends Thread{
 			broadcast(broadcastPacket);
 			System.out.println("send broadcastPacket");
 			
+			/*
+			 * 
+			 */
 			synchronized(hashMap){
 				hashMap.put(id,  oos);
 			}
@@ -92,6 +100,18 @@ class ServerThread extends Thread{
 			Object obj = null;
 			
 			while((obj = ois.readObject()) != null){
+				/*
+				 * Iterator<Client_list> it = list.iterator(); //Client들의 정보
+				 * iterator화
+				 * 
+				 * while(it.hasNext()){ //client로부터 정보를 받을때마다 Client_list k=
+				 * it.next(); k.getOut().writeObject(p); //모든 Client에게 정보를 뿌려줌
+				 * k.getOut().flush();
+				 * System.out.println(k.getName()+" "+k.getServer()+" "+k.
+				 * getServer()+" ");//어디서부터 온 정보인지 출력 }
+				 * 
+				 * private ArrayList<Client_list> list = new ArrayList<Client_list>();//Client를 받을 리스트
+				 */
 				
 				Packet packet = (Packet)obj;
 				System.out.println("패킷도착");
@@ -105,33 +125,59 @@ class ServerThread extends Thread{
 					}
 		
 				switch(packet.getMsgType()){
-				//에디터 타이핑 
+				// active버튼 누르는 경우-락변수에 active한 사용자의 id가 입력된다.
 				case 4:
+					// noUser상태에서 락변수 권한 요청을 하는경우
 					if (Server.lock.equals("noUser")) {
+
 						Server.lock=id;
 						System.out.println("case 4  if구문 lock변수 현재 값 확인 "+Server.lock);
 						broadcastDeactivateMsg(id);
 						
+
 					} else {
-						//누가 사용중이다. 
-						System.out.println("case 4  else구문 lock변수 현재 값 확인 "+Server.lock);
+
+						// 누가 사용중 상황에서 락변수 권한 요청을 하는 경우
+						System.out.println("case 4  else구문 lock변수 현재 값 확인 " + Server.lock);
+
+
 					}
 					break;
+				// deactive버튼 누르는 경우- 락변수가 풀리면서 그동안 수정한 내용들이 모든 사용자들에게 전송된다.
 				case 5:
 					if (Server.lock.equals(id)) {
+
 					//락변수의 사용자의 ID와 일치하면 락을 분다
 						System.out.println("case 5 if구문 락을 해제하려는 사용자:"+id);
 						Server.lock="noUser";
 						System.out.println("해제된 lock상태"+Server.lock);
 						broadcastActivateMsg(id);
+
+						Set<String> sendTargets=hashMap.keySet();
+						//String[] arr=(String[])keys.toArray();
+						Object[] array=sendTargets.toArray();
+						
+						for(int i=0;i<array.length;i++){
+							System.out.println("HashMap의 id출력:"+array[i]);
+							String editedSourceCode=packet.getSourceCode();
+							Packet sendPacket =new Packet();
+							sendPacket.setLang(packet.getLang());
+							sendPacket.setMsgType(6);
+							sendPacket.setId(id);
+							sendPacket.setSourceCode(editedSourceCode);
+							hashMap.get(array[i]).writeObject(sendPacket);
+						}
+
+
 					} else {
-					//일치하지않는경우 워닝 메시지를 보내자.
+						// 일치하지않는경우 어떤 사용자가 사용중이라고 워닝 메시지를 보내자.
 
 					}
 					break;
 						
 					//채팅 
 					case 1:
+						broadcast(packet);
 						break;
 					
 					//컴파일

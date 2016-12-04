@@ -1,3 +1,4 @@
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -6,27 +7,23 @@ import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextArea;
 import java.awt.TextField;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import javax.swing.JOptionPane;
 
-public class Client {
+public class Client implements ActionListener{
 	public static void main(String[] args) {
 
 		Socket sock = null;
 		ObjectInputStream ois = null;
 		ObjectOutputStream oos = null;
 		boolean endFlag = false;
+		
 		String name;
 		CodeReviewFrame frame;
 
@@ -39,7 +36,7 @@ public class Client {
 			oos = new ObjectOutputStream(sock.getOutputStream());
 			ois = new ObjectInputStream(sock.getInputStream());
 			frame = new CodeReviewFrame(oos,name);
-
+			
 			//접속자 id를 알려 주는 패킷
 			Packet packet = new Packet();
 			packet.setMsgType(3);
@@ -56,8 +53,14 @@ public class Client {
 			System.out.println(e);
 		}
 	}
-}
 
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+}
+//test
 class InputThread extends Thread {
 	private Socket sock;
 	private ObjectInputStream ois;
@@ -69,7 +72,7 @@ class InputThread extends Thread {
 		this.crf = crf;
 		this.name = name;
 	}
-
+//
 	public void run() {
 
 		Packet packet;
@@ -85,6 +88,7 @@ class InputThread extends Thread {
 
 				// 채팅
 				case 1:
+					crf.setChattingBox(packet.getCh());
 					break;
 
 				// 컴파일
@@ -94,13 +98,22 @@ class InputThread extends Thread {
 				case 3:
 					crf.setPeople(packet.getId());
 					break;
+
 				case 4:
 					crf.getEditor().setEditable(false);
 					crf.getEditor().setBackground(Color.lightGray);
 					break;
+
 				case 5:
 					crf.getEditor().setEditable(true);
+					crf.getEditor().setBackground(Color.white);
+					System.out.println("case5:"+packet);
 					break;
+				case 6:
+					System.out.println("case6입니다 :"+packet);
+					crf.setEditor(packet.getSourceCode());
+					break;
+
 				}
 			}
 			
