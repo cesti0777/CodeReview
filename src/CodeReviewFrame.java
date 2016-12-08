@@ -98,15 +98,18 @@ public class CodeReviewFrame extends JFrame{
 		//Console
 		sp_console.setLocation(30, 670);
 		sp_console.setSize(900, 250);
+		console.setEditable(false);
 		console.setFont(new Font(console.getName(), Font.PLAIN, 16));
 		
 		//People
 		sp_people.setLocation(960, 50);
 		sp_people.setSize(450, 300);
+		people.setEditable(false);
 		
 		//ChattingBox
 		sp_chattingBox.setLocation(960, 400);
 		sp_chattingBox.setSize(450, 480);
+		chattingBox.setEditable(false);
 
 		centerPanel.add(sp_editor, BorderLayout.CENTER);
 		centerPanel.add(sp_people);

@@ -33,6 +33,8 @@ public class Client implements ActionListener{
 		name = JOptionPane.showInputDialog(null, "log-in할 아이디를 입력하세요", "log in", JOptionPane.YES_OPTION);
 
 		try {
+			
+			//sock = new Socket("58.124.62.124", 11002);
 			sock = new Socket("127.0.0.1", 11002);
 			System.out.println("접속에 성공하였습니다.");
 
