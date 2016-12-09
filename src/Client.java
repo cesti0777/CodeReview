@@ -34,8 +34,8 @@ public class Client implements ActionListener{
 
 		try {
 			
-			//sock = new Socket("58.124.62.124", 11002);
-			sock = new Socket("127.0.0.1", 11002);
+			sock = new Socket("58.124.62.124", 11002);
+			//sock = new Socket("127.0.0.1", 11002);
 			System.out.println("접속에 성공하였습니다.");
 
 			oos = new ObjectOutputStream(sock.getOutputStream());
@@ -129,7 +129,7 @@ class InputThread extends Thread {
 					break;
 				case 8:
 					System.out.println("case8입니다 :"+packet);
-					JOptionPane.showMessageDialog(crf, "actvie 버튼을 먼저 눌러주세요");
+					JOptionPane.showMessageDialog(crf, "active 버튼을 먼저 눌러주세요");
 
 					break;
 				case 9:

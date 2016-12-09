@@ -155,18 +155,18 @@ public class CodeReviewFrame extends JFrame{
 		
 		toolbar = new JToolBar();
 		
-		newButton = new JButton("New");
+		//newButton = new JButton("New");
 		openButton = new JButton("Open");
 		saveButton = new JButton("Save");
-		saveAsButton = new JButton("Save As");
+		//saveAsButton = new JButton("Save As");
 		compileButton = new JButton("Run");
 		editActive = new JButton("Activate");
 		editDeactive = new JButton("Deactivate");
 
-		toolbar.add(newButton);
+		//toolbar.add(newButton);
 		toolbar.add(openButton);
 		toolbar.add(saveButton);
-		toolbar.add(saveAsButton);
+		//toolbar.add(saveAsButton);
 		toolbar.addSeparator();
 		toolbar.addSeparator();
 		toolbar.addSeparator();
